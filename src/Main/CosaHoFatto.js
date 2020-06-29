@@ -45,7 +45,13 @@ export default function CosaHoFatto() {
   }, []);
 
   function getParagrafi(da) {
-    let righe = da.split("\n");
+    let righe;
+
+    if (da) {
+      righe = da && da.split("\n");
+    } else {
+      return;
+    }
 
     return righe.map((riga) => {
       return (
@@ -65,7 +71,7 @@ export default function CosaHoFatto() {
         <Typography color="inherit" variant="h3" gutterBottom>
           I miei progetti
         </Typography>
-        <EditableCard />
+
         <MyCard
           logo={RiassuntyLogo}
           fotoCard={RiassuntyMainPage}

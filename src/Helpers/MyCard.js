@@ -1,12 +1,13 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { Parallax, Background } from "react-parallax";
 
 import clsx from "clsx";
 import Divider from "@material-ui/core/Divider";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
-import { Parallax } from "react-scroll-parallax";
+
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
 import Collapse from "@material-ui/core/Collapse";
@@ -79,16 +80,16 @@ export default function MyCard(props) {
               </CardMedia>
             ) : (
               <Parallax
-                className="custom-class"
-                y={[-10, 10]}
-                tagOuter="figure"
-              >
-                <CardMedia
-                  className={classes.media}
-                  image={props.fotoCard}
-                  title={props.titoloFotoCard}
-                />
-              </Parallax>
+                bgImage={props.fotoCard}
+                strength={200}
+                renderLayer={(percentage) => (
+                  <CardMedia
+                    className={classes.media}
+                    image={props.fotoCard}
+                    title={props.titoloFotoCard}
+                  />
+                )}
+              ></Parallax>
             )}
           </>
         ) : (

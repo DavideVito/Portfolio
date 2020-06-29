@@ -5,7 +5,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
 import Avatar from "@material-ui/core/Avatar";
-import Typography from "@material-ui/core/Typography";
+
 import AddIcon from "@material-ui/icons/Add";
 import Dropzone from "react-dropzone";
 import {
@@ -22,7 +22,7 @@ import {
 import { randomUDID } from "../Helpers/Utils";
 import Button from "@material-ui/core/Button";
 import { storageRef } from "../Firebase/firebase";
-import TextareaAutosize from "@material-ui/core/TextareaAutosize";
+
 import TextField from "@material-ui/core/TextField";
 import Switch from "@material-ui/core/Switch";
 import debounce from "debounce";
@@ -104,7 +104,11 @@ export default function EditableCard() {
           logo={
             <>
               {logo !== "" ? (
-                <img src={logo} style={{ width: "90%", height: "90%" }} />
+                <img
+                  src={logo}
+                  alt="logo"
+                  style={{ width: "90%", height: "90%" }}
+                />
               ) : (
                 <>
                   <Dropzone
@@ -159,7 +163,11 @@ export default function EditableCard() {
           fotoCard={
             <>
               {immagine !== "" ? (
-                <img src={immagine} style={{ width: "90%", height: "90%" }} />
+                <img
+                  src={immagine}
+                  alt="immagine"
+                  style={{ width: "90%", height: "90%" }}
+                />
               ) : (
                 <Dropzone
                   onDrop={([file]) => {
