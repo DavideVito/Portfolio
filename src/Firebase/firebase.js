@@ -3,8 +3,8 @@ import firebaseConfig from "./cred.js";
 
 import "firebase/firestore";
 import "firebase/auth";
-
 import "firebase/storage";
+firebase.initializeApp(firebaseConfig());
 
 // Initialize Firebase
 

@@ -1,152 +1,70 @@
-import firebase, { firestore } from "./config";
+import { firestore } from "./firebase";
 
-export function writeUserData({ immagineProfilo, nome, id }) {
-  return firestore
-    .collection("utenti")
-    .doc(`${id}`)
-    .set({ immagineProfilo, nome, id })
-    .then(console.log);
-}
-
-export async function getUser(id) {
-  if (id === "" || typeof id === "undefined") return [];
-  let a = await firestore.collection("utenti").limit(10).get();
-  console.log("fetch");
-  return a.docs.filter((d) => {
-    let e = d.data();
-
-    return e.id !== id;
-  });
-}
-
-function getData() {
-  let a = firebase.firestore.Timestamp.now().toDate();
-
-  return a;
-}
-
-export async function getIndirizziAndMaterie() {
-  let indirizzi = await firestore.collection(`Indirizzi`).get();
-  let a = [];
-
-  indirizzi.docs.forEach((indirizzo, indice) => {
-    let c = [];
-    let materie = indirizzo.data().Materie;
-
-    materie.forEach((materia) => {
-      c.push({ nome: materia });
-    });
-
-    let b = { nome: indirizzo.id, dati: c, id: indice };
-    a.push(b);
-  });
-  console.log(a);
-
-  return a;
-}
-
-export async function getAnniMaterieAndRiassunti(nomeMateria, indirizzo) {
-  let anni = await firestore
-    .collection(`Materie`)
-    .where("Materia", "==", `${nomeMateria}`)
-    .where("Indirizzo", "==", `${indirizzo}`)
-    .get();
-
-  try {
-    anni = anni.docs[0].data();
-  } catch (error) {
-    window.location.href = "/";
-  }
-
-  let a = [];
-
-  let indice = 0;
-
-  console.log("Argomenti", arguments);
-
-  for (let anno of anni.Anni) {
-    let dati = [];
-    //debugger;
-    let riassunti = await firestore
-      .collection("Riassunti")
-      .where("anno", "==", anno + "")
-      .where("materia", "==", `${nomeMateria}`)
-      .where("indirizzo", "==", `${indirizzo}`)
-      .get();
-
-    riassunti = riassunti.docs;
-    console.log(riassunti);
-    //debugger;
-    riassunti.forEach((riassunto) => {
-      //debugger;
-      dati.push({ nome: riassunto.data().nome, id: Math.random() * 100 });
-    });
-
-    let b = { nome: anno, dati, id: indice };
-    //debugger;
-    a.push(b);
-    indice++;
-  }
-
-  console.log(a);
-  return a;
-}
-
-export async function riassuntiCaricatiDa(idUtente) {
+export async function generaDocumento(tipo) {
   let a = await firestore
-    .collection("Riassunti")
-    .where("idUtente", "==", idUtente)
+    .collection("Cards")
+    .add({ tipo: tipo, visibile: false });
+
+  return a.id;
+}
+
+export async function elimina(id) {
+  let a = await firestore.collection("Cards").doc(`${id}`).delete();
+}
+
+export async function rendiVisibile(id) {
+  let a = await firestore
+    .collection("Cards")
+    .doc(`${id}`)
+    .set({ visibile: true }, { merge: true });
+}
+
+export async function impostaTitolo(id, titolo) {
+  await firestore
+    .collection("Cards")
+    .doc(`${id}`)
+    .set({ titolo }, { merge: true });
+}
+
+export async function impostaSottotitolo(id, sottotilo) {
+  await firestore
+    .collection("Cards")
+    .doc(`${id}`)
+    .set({ sottotilo }, { merge: true });
+}
+
+export async function impostaContenuti(id, contenuti) {
+  await firestore
+    .collection("Cards")
+    .doc(`${id}`)
+    .set({ contenuti }, { merge: true });
+}
+
+export async function impostaImmagineGrossa(id, fotoGrossa) {
+  await firestore
+    .collection("Cards")
+    .doc(`${id}`)
+    .set({ fotoGrossa }, { merge: true });
+}
+
+export async function impostaLogo(id, logo) {
+  await firestore
+    .collection("Cards")
+    .doc(`${id}`)
+    .set({ logo }, { merge: true });
+}
+
+export async function getCards(tipo) {
+  let a = await firestore
+    .collection("Cards")
+    .where("visibile", "==", true)
+    .where("tipo", "==", `${tipo}`)
     .get();
 
-  let b = a.docs.map((v) => v.data());
+  let b = [];
 
-  return b;
-}
-
-export async function togliRiassunto(idRiassunto) {
-  firestore.collection("Riassunti").doc(idRiassunto).delete();
-}
-
-export async function inserisciNelDB(nome, materia, anno, indirizzo, idUtente) {
-  firestore
-    .collection("Riassunti")
-    .doc(`${nome}`)
-    .set({ anno, materia, nome, indirizzo, idUtente })
-    .then(() => {
-      console.log("ok");
-    })
-    .catch((e) => {
-      console.log(e);
-    });
-}
-
-export async function cercaRiassunto(nome) {
-  const text = nome;
-  const end = text.replace(/.$/, (c) =>
-    String.fromCharCode(c.charCodeAt(0) + 1)
-  );
-
-  let riass = await firestore
-    .collection("Riassunti")
-    .where("nome", ">=", text)
-    .where("nome", "<", end)
-    .get();
-
-  riass = riass.docs;
-
-  let b = riass.map((ri) => {
-    return ri.data();
-  });
-
-  return b;
-}
-
-export async function getIndirizzi() {
-  let a = await firestore.collection("Indirizzi").get();
-  a = a.docs;
-
-  let b = a.map((i, ind) => {
-    return { indirizzo: a[ind].id, materie: i.data().Materie };
+  a.docs.forEach((card) => {
+    b.push(card.data());
   });
 
   return b;

@@ -83,6 +83,19 @@ export default function LeftMenu(props) {
               </ListItem>
               <ListItem
                 button
+                key={"Competenze"}
+                onClick={() => {
+                  window.location.href = "/competenze";
+                }}
+              >
+                <ListItemIcon>
+                  <EmojiPeopleOutlinedIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Competenze"} />
+              </ListItem>
+              <Divider />
+              <ListItem
+                button
                 key={"Cosa ho fatto"}
                 onClick={() => {
                   window.location.href = "/projects";
