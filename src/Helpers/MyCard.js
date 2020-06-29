@@ -73,11 +73,8 @@ export default function MyCard(props) {
         {props.fotoCard ? (
           <>
             {props.editMode ? (
-              <CardMedia
-                className={classes.media}
-                image={props.fotoCard}
-                title={props.titoloFotoCard}
-              >
+              <CardMedia title={props.titoloFotoCard}>
+                <div style={{ marginTop: "25px" }}></div>
                 {props.fotoCard}
               </CardMedia>
             ) : (

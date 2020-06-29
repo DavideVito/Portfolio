@@ -33,6 +33,7 @@ export default function CosaHoFatto() {
               .getDownloadURL();
             c.immagine = linkImmagine;
           } catch (error) {}
+
           b.push(c);
         }
       }
@@ -42,6 +43,19 @@ export default function CosaHoFatto() {
       });
     });
   }, []);
+
+  function getParagrafi(da) {
+    let righe = da.split("\n");
+
+    return righe.map((riga) => {
+      return (
+        <Typography style={{ paddingLeft: "3%" }} paragraph>
+          {riga}
+        </Typography>
+      );
+    });
+  }
+
   return (
     <div>
       <CssBaseline />
@@ -99,12 +113,10 @@ export default function CosaHoFatto() {
               logo={card.logo}
               fotoCard={card.immagine}
               titolo={card.titolo}
-              body={card.sottotilo}
+              body={getParagrafi(card.sottotilo)}
             >
               {typeof card.contenuti !== "undefined" ? (
-                <Typography paragraph style={{ paddingLeft: "3%" }}>
-                  {card.contenuti}{" "}
-                </Typography>
+                <>{getParagrafi(card.contenuti)}</>
               ) : (
                 ""
               )}

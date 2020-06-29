@@ -4,6 +4,10 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import CheckIcon from "@material-ui/icons/Check";
 import ClearIcon from "@material-ui/icons/Clear";
+import Avatar from "@material-ui/core/Avatar";
+import Typography from "@material-ui/core/Typography";
+import AddIcon from "@material-ui/icons/Add";
+import Dropzone from "react-dropzone";
 import {
   generaDocumento,
   elimina,
@@ -44,6 +48,19 @@ export default function EditableCard() {
     a();
   }, []);
 
+  useEffect(() => {
+    if (stato) {
+      document.getElementById("textAreaContenuti").onkeypress = debounce(
+        (e) => {
+          cambiaContenutiSotto(e.target.value);
+
+          impostaContenuti(id, e.target.value);
+        },
+        timeOut
+      );
+    }
+  }, [stato]);
+
   const timeOut = 1500;
 
   function inizializzaRoba(id) {
@@ -60,17 +77,6 @@ export default function EditableCard() {
       },
       timeOut
     );
-
-    if (stato) {
-      document.getElementById("textAreaContenuti").onkeypress = debounce(
-        (e) => {
-          cambiaContenutiSotto(e.target.value);
-
-          impostaContenuti(id, e.target.value);
-        },
-        timeOut
-      );
-    }
   }
 
   return (
@@ -100,15 +106,13 @@ export default function EditableCard() {
               {logo !== "" ? (
                 <img src={logo} style={{ width: "90%", height: "90%" }} />
               ) : (
-                <center>
-                  <input
-                    type="file"
-                    id="logo"
-                    onChange={(e) => {
+                <>
+                  <Dropzone
+                    onDrop={([file]) => {
                       let str = randomUDID();
                       storageRef
                         .child(str)
-                        .put(e.target.files[0])
+                        .put(file)
                         .on(
                           "state_changed",
                           (snapshot) => {
@@ -131,13 +135,24 @@ export default function EditableCard() {
                               .child(str)
                               .getDownloadURL()
                               .then((a) => {
-                                cambiaImmagine(a);
+                                cambiaLogo(a);
                               });
                           }
                         );
                     }}
-                  />
-                </center>
+                  >
+                    {({ getRootProps, getInputProps }) => (
+                      <section>
+                        <div {...getRootProps()}>
+                          <input {...getInputProps()} />
+                          <Avatar style={{ cursor: "pointer" }}>
+                            <AddIcon />
+                          </Avatar>{" "}
+                        </div>
+                      </section>
+                    )}
+                  </Dropzone>
+                </>
               )}
             </>
           }
@@ -146,58 +161,80 @@ export default function EditableCard() {
               {immagine !== "" ? (
                 <img src={immagine} style={{ width: "90%", height: "90%" }} />
               ) : (
-                <center>
-                  <input
-                    type="file"
-                    id="fotoGrossa"
-                    onChange={(e) => {
-                      let str = randomUDID();
-                      storageRef
-                        .child(str)
-                        .put(e.target.files[0])
-                        .on(
-                          "state_changed",
-                          (snapshot) => {
-                            let progress =
-                              (snapshot.bytesTransferred /
-                                snapshot.totalBytes) *
-                              100;
+                <Dropzone
+                  onDrop={([file]) => {
+                    let str = randomUDID();
+                    storageRef
+                      .child(str)
+                      .put(file)
+                      .on(
+                        "state_changed",
+                        (snapshot) => {
+                          let progress =
+                            (snapshot.bytesTransferred / snapshot.totalBytes) *
+                            100;
 
-                            cambiaProgressoImmagine(progress);
-                          },
-                          () => {
-                            alert(
-                              "Errore durante il caricamento, we're sorry :("
-                            );
-                          },
-                          (s) => {
-                            cambiaProgressoImmagine(0);
-                            impostaImmagineGrossa(id, str);
-                            storageRef
-                              .child(str)
-                              .getDownloadURL()
-                              .then((a) => {
-                                cambiaImmagine(a);
-                              });
-                          }
-                        );
-                    }}
-                  />
-                </center>
+                          cambiaProgressoImmagine(progress);
+                        },
+                        () => {
+                          alert(
+                            "Errore durante il caricamento, we're sorry :("
+                          );
+                        },
+                        (s) => {
+                          cambiaProgressoImmagine(0);
+                          impostaImmagineGrossa(id, str);
+                          storageRef
+                            .child(str)
+                            .getDownloadURL()
+                            .then((a) => {
+                              cambiaImmagine(a);
+                            });
+                        }
+                      );
+                  }}
+                >
+                  {({ getRootProps, getInputProps }) => (
+                    <section>
+                      <div {...getRootProps()}>
+                        <input {...getInputProps()} />
+                        <center
+                          style={{
+                            marginBottom: "25px",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <MyContainer style={{}}>
+                            <Avatar>
+                              <AddIcon />
+                            </Avatar>{" "}
+                          </MyContainer>
+                        </center>
+                      </div>
+                    </section>
+                  )}
+                </Dropzone>
               )}
             </>
           }
           titolo={<TextField id="titolo" label="Standard" />}
           body={
-            <center>
-              <TextareaAutosize
+            <>
+              <CssBaseline />
+
+              <TextField
+                style={{
+                  marginTop: "25px",
+                  height: "100px",
+                  width: "100%",
+                }}
                 id="textAreaSottotitolo"
-                rowsMax={4}
-                aria-label="maximum height"
-                placeholder="Testo"
-                defaultValue=""
+                label="Testo"
+                multiline
+                rows={4}
+                variant="outlined"
               />
-            </center>
+            </>
           }
         >
           <Switch
@@ -210,12 +247,17 @@ export default function EditableCard() {
           />
           <br />
           {stato ? (
-            <TextareaAutosize
+            <TextField
+              style={{
+                marginTop: "25px",
+                height: "100px",
+                width: "100%",
+              }}
               id="textAreaContenuti"
-              rowsMax={4}
-              aria-label="maximum height"
-              placeholder="Testo"
-              defaultValue=""
+              label="Testo"
+              multiline
+              rows={4}
+              variant="outlined"
             />
           ) : (
             <></>
@@ -247,3 +289,44 @@ export default function EditableCard() {
     </div>
   );
 }
+/*
+
+
+<center>
+                    {
+                      let str = randomUDID();
+                      storageRef
+                        .child(str)
+                        .put(e.target.files[0])
+                        .on(
+                          "state_changed",
+                          (snapshot) => {
+                            let progress =
+                              (snapshot.bytesTransferred /
+                                snapshot.totalBytes) *
+                              100;
+
+                            cambiaProgressoImmagine(progress);
+                          },
+                          () => {
+                            alert(
+                              "Errore durante il caricamento, we're sorry :("
+                            );
+                          },
+                          (s) => {
+                            cambiaProgressoImmagine(0);
+                            impostaImmagineGrossa(id, str);
+                            storageRef
+                              .child(str)
+                              .getDownloadURL()
+                              .then((a) => {
+                                cambiaImmagine(a);
+                              });
+                          }
+                        );
+                    }
+
+
+
+
+*/
