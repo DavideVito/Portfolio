@@ -1,66 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import LeftMenu from "../Helpers/Menus";
 import MyContainer from "../Helpers/MyContainer.js";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
-import { storageRef } from "../Firebase/firebase";
-import { getCards } from "../Firebase/firestore";
 
+import { userContext } from "../Helpers/Context/userContext";
+
+import { stampaCard, getCards } from "../Helpers/Utils";
 import EditableCard from "../Helpers/EditableCard";
 import RiassuntyLogo from "../Foto/Riassunti/RiassuntyLogo.jpg";
 import RiassuntyMainPage from "../Foto/Riassunti/RiassuntyMainPage.png";
-import { randomUDID } from "../Helpers/Utils";
+
 import MyCard from "../Helpers/MyCard";
 
 export default function CosaHoFatto() {
   let [cards, cambiaCards] = useState([]);
+  let [utente] = useContext(userContext);
 
   useEffect(() => {
-    getCards("projects").then((cards) => {
-      let b = [];
-
-      async function prendiLink() {
-        for (let c of cards) {
-          try {
-            let linkFoto = await storageRef.child(c.logo).getDownloadURL();
-            c.logo = linkFoto;
-          } catch (error) {}
-
-          try {
-            let linkImmagine = await storageRef
-              .child(c.fotoGrossa)
-              .getDownloadURL();
-            c.immagine = linkImmagine;
-          } catch (error) {}
-
-          b.push(c);
-        }
-      }
-
-      prendiLink().then(() => {
-        cambiaCards(b);
-      });
+    getCards("projects", utente === "").then((c) => {
+      cambiaCards(c);
     });
   }, []);
-
-  function getParagrafi(da) {
-    let righe;
-
-    if (da) {
-      righe = da && da.split("\n");
-    } else {
-      return;
-    }
-
-    return righe.map((riga) => {
-      return (
-        <Typography style={{ paddingLeft: "3%" }} paragraph>
-          {riga}
-        </Typography>
-      );
-    });
-  }
 
   return (
     <div>
@@ -71,7 +33,7 @@ export default function CosaHoFatto() {
         <Typography color="inherit" variant="h3" gutterBottom>
           I miei progetti
         </Typography>
-
+        <EditableCard tipo="projects" />
         <MyCard
           logo={RiassuntyLogo}
           fotoCard={RiassuntyMainPage}
@@ -111,24 +73,7 @@ export default function CosaHoFatto() {
           </Typography>
         </MyCard>
 
-        {cards.map((card) => {
-          return (
-            <MyCard
-              editMode={false}
-              key={randomUDID()}
-              logo={card.logo}
-              fotoCard={card.immagine}
-              titolo={card.titolo}
-              body={getParagrafi(card.sottotilo)}
-            >
-              {typeof card.contenuti !== "undefined" ? (
-                <>{getParagrafi(card.contenuti)}</>
-              ) : (
-                ""
-              )}
-            </MyCard>
-          );
-        })}
+        {stampaCard(cards, "projects", localStorage.getItem("utente"))}
       </MyContainer>
     </div>
   );

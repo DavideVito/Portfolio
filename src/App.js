@@ -7,6 +7,7 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import Studio from "./Main/Studio";
 import CosaHoFatto from "./Main/CosaHoFatto";
 import Competenze from "./Main/Competenze";
+import { UserProvider } from "./Helpers/Context/userContext";
 
 function App() {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
@@ -29,19 +30,22 @@ function App() {
       fontSize: "2rem",
     },
   };
+
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <Switch>
-          <Route path="/me" exact component={Homepage} />{" "}
-          <Route path="/" exact component={Homepage} />{" "}
-          <Route path="/Study" exact component={Studio} />{" "}
-          <Route path="/competenze" exact component={Competenze} />{" "}
-          <Route path="/projects" exact component={CosaHoFatto} />{" "}
-        </Switch>{" "}
-      </Router>
-    </ThemeProvider>
+    <UserProvider>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <Router>
+          <Switch>
+            <Route path="/me" exact component={Homepage} />{" "}
+            <Route path="/" exact component={Homepage} />{" "}
+            <Route path="/Study" exact component={Studio} />{" "}
+            <Route path="/competenze" exact component={Competenze} />{" "}
+            <Route path="/projects" exact component={CosaHoFatto} />{" "}
+          </Switch>{" "}
+        </Router>
+      </ThemeProvider>
+    </UserProvider>
   );
 }
 

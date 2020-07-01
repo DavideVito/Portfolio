@@ -1,6 +1,5 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Parallax, Background } from "react-parallax";
 
 import clsx from "clsx";
 import Divider from "@material-ui/core/Divider";
@@ -38,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MyCard(props) {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(true);
+  const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -79,17 +78,7 @@ export default function MyCard(props) {
                 {props.fotoCard}
               </CardMedia>
             ) : (
-              <Parallax
-                bgImage={props.fotoCard}
-                strength={200}
-                renderLayer={(percentage) => (
-                  <CardMedia
-                    className={classes.media}
-                    image={props.fotoCard}
-                    title={props.titoloFotoCard}
-                  />
-                )}
-              ></Parallax>
+              <CardMedia className={classes.media} image={props.fotoCard} />
             )}
           </>
         ) : (

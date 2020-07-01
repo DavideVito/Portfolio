@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState, useEffect, useContext } from "react";
 import LeftMenu from "../Helpers/Menus";
 import MyContainer from "../Helpers/MyContainer.js";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import ReactExample from "../Foto/ReactExample.png";
+import EditableCard from "../Helpers/EditableCard";
+import { stampaCard, getCards } from "../Helpers/Utils";
+import { userContext } from "../Helpers/Context/userContext";
 
 import CSSLogo from "../Foto/CSSLogo.png";
 import HTMLlogo from "../Foto/HTMLlogo.png";
@@ -15,6 +18,14 @@ import ReactLogo from "../Foto/ReactLogo.png";
 import MyCard from "../Helpers/MyCard";
 
 export default function Studio() {
+  let [cards, cambiaCards] = useState([]);
+  let [utente] = useContext(userContext);
+  useEffect(() => {
+    getCards("competenze", utente === "").then((c) => {
+      cambiaCards(c);
+    });
+  }, []);
+
   return (
     <div>
       <CssBaseline />
@@ -24,6 +35,8 @@ export default function Studio() {
         <Typography color="inherit" variant="h3" gutterBottom>
           Le mie competenze
         </Typography>
+
+        <EditableCard tipo="competenze" />
 
         <MyCard
           logo={ReactLogo}
@@ -58,9 +71,7 @@ export default function Studio() {
           titolo="Swift"
           sottotilolo="Apple"
           body={"Conoscenza basilare del linguaggio di programmazione Swift"}
-        >
-          <div>CIA Ofoprjgpofirehjgpierhjgpoerjg</div>
-        </MyCard>
+        ></MyCard>
 
         <MyCard
           logo={HTMLlogo}
@@ -145,6 +156,8 @@ export default function Studio() {
           titolo="Progressive Web App"
           body={"Conoscenza e utilizzo della tecnologia PWA"}
         />
+
+        {stampaCard(cards, "competenze", localStorage.getItem("utente"))}
       </MyContainer>
     </div>
   );

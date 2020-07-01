@@ -1,5 +1,13 @@
 import { firestore } from "./firebase";
 
+export async function nascondiDocumento(id) {
+  await firestore.collection("Cards").doc(`${id}`).set({ visible: false });
+}
+
+export async function eliminaDocumento(id) {
+  await firestore.collection("Cards").doc(`${id}`).delete();
+}
+
 export async function generaDocumento(tipo) {
   let a = await firestore
     .collection("Cards")
@@ -8,12 +16,8 @@ export async function generaDocumento(tipo) {
   return a.id;
 }
 
-export async function elimina(id) {
-  let a = await firestore.collection("Cards").doc(`${id}`).delete();
-}
-
 export async function rendiVisibile(id) {
-  let a = await firestore
+  await firestore
     .collection("Cards")
     .doc(`${id}`)
     .set({ visibile: true }, { merge: true });
@@ -54,17 +58,19 @@ export async function impostaLogo(id, logo) {
     .set({ logo }, { merge: true });
 }
 
-export async function getCards(tipo) {
-  let a = await firestore
-    .collection("Cards")
-    .where("visibile", "==", true)
-    .where("tipo", "==", `${tipo}`)
-    .get();
+export async function getCards(tipo, vis = false) {
+  let a = firestore.collection("Cards").where("tipo", "==", `${tipo}`);
+
+  if (vis) {
+    a = await a.get();
+  } else {
+    a = await a.where("visibile", "==", true);
+  }
 
   let b = [];
 
   a.docs.forEach((card) => {
-    b.push(card.data());
+    b.push({ card: card.data(), id: card.id });
   });
 
   return b;
