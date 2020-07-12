@@ -453,7 +453,7 @@ export default function EditableCard({ tipo, oldData, oid }) {
                       label={(() => {
                         try {
                           return typeof oldData.sottotilo !== "undefined"
-                            ? oldData.titolo
+                            ? oldData.sottotilo
                             : "Titolo";
                         } catch (error) {}
 
@@ -505,7 +505,7 @@ export default function EditableCard({ tipo, oldData, oid }) {
                     label={(() => {
                       try {
                         return typeof oldData.contenuti !== "undefined"
-                          ? oldData.titolo
+                          ? oldData.contenuti
                           : "Titolo";
                       } catch (error) {}
 

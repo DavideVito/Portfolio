@@ -24,3 +24,5 @@ yarn-error.log*
 
 /Firebase/cred.js
 .env
+.firebasesrc
+.firebase/*
