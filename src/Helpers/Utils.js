@@ -1,11 +1,12 @@
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import MyCard from "./MyCard";
+
 import { storageRef } from "../Firebase/firebase";
 
 import EditableCard from "./EditableCard";
 import { getCards as gc } from "../Firebase/firestore";
-
+const API_KEY = process.env.REACT_APP_GOOGLE_TRANSLATOR_KEY;
 export function randomUDID() {
   let sGuid = "";
   for (let i = 0; i < 32; i++) {
@@ -33,7 +34,8 @@ function getParagrafi(da) {
 }
 
 export async function getCards(tipo, vis) {
-  let cards = await gc(tipo, vis);
+  let lingua = window.navigator.language.slice(0, 2);
+  let cards = await gc(tipo, vis, lingua);
 
   async function prendiLink() {
     let b = [];
@@ -92,4 +94,18 @@ export function stampaCard(cards, tipo, user) {
     );
   });
 }
+
+export async function traduci(testo) {
+  debugger;
+  let apiKey = API_KEY;
+  let link = `https://translation.googleapis.com/language/translate/v2?target=en&key=${apiKey}&q=${testo}`;
+
+  link = encodeURI(link);
+
+  let ris = await fetch(link);
+
+  ris = await ris.json();
+  return ris.data.translations[0].translatedText;
+}
+
 //<EditableCard oldData={card} oid={id} tipo={tipo} />

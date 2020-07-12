@@ -1,4 +1,5 @@
 import { firestore } from "./firebase";
+import { traduci } from "./../Helpers/Utils";
 
 export async function nascondiDocumento(id) {
   await firestore.collection("Cards").doc(`${id}`).set({ visible: false });
@@ -31,17 +32,21 @@ export async function impostaTitolo(id, titolo) {
 }
 
 export async function impostaSottotitolo(id, sottotilo) {
-  await firestore
-    .collection("Cards")
-    .doc(`${id}`)
-    .set({ sottotilo }, { merge: true });
+  let testoIt = sottotilo;
+  let testoEn = await traduci(sottotilo);
+
+  let doc = { it: { sottilo: testoIt }, en: { sottotilo: testoEn } };
+
+  await firestore.collection("Cards").doc(`${id}`).set(doc, { merge: true });
 }
 
 export async function impostaContenuti(id, contenuti) {
-  await firestore
-    .collection("Cards")
-    .doc(`${id}`)
-    .set({ contenuti }, { merge: true });
+  let testoIt = contenuti;
+  let testoEn = await traduci(contenuti);
+
+  let doc = { it: { contenuti: testoIt }, en: { contenuti: testoEn } };
+
+  await firestore.collection("Cards").doc(`${id}`).set(doc, { merge: true });
 }
 
 export async function impostaImmagineGrossa(id, fotoGrossa) {
@@ -58,7 +63,7 @@ export async function impostaLogo(id, logo) {
     .set({ logo }, { merge: true });
 }
 
-export async function getCards(tipo, vis = false) {
+export async function getCards(tipo, vis = false, lingua) {
   let a = firestore.collection("Cards").where("tipo", "==", `${tipo}`);
 
   if (vis) {
@@ -68,9 +73,37 @@ export async function getCards(tipo, vis = false) {
   }
 
   let b = [];
-
   a.docs.forEach((card) => {
-    b.push({ card: card.data(), id: card.id });
+    let carta = card.data();
+
+    let titolo = carta.titolo;
+    let visibile = carta.visibile;
+    let tipo = carta.tipo;
+    let fotoGrossa = carta.fotoGrossa;
+    let logo = carta.logo;
+
+    let contenuti = "";
+
+    try {
+      contenuti = carta[lingua || "en"].contenuti || "";
+    } catch (error) {}
+
+    let sottotilo = "";
+    try {
+      sottotilo = carta[lingua || "en"].sottotilo || "";
+    } catch (error) {}
+
+    let mCard = {
+      titolo,
+      visibile,
+      tipo,
+      fotoGrossa,
+      logo,
+      contenuti,
+      sottotilo,
+    };
+
+    b.push({ card: mCard, id: card.id });
   });
 
   return b;
