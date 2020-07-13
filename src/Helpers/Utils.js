@@ -33,8 +33,12 @@ function getParagrafi(da) {
   });
 }
 
+export function getLingua() {
+  return window.navigator.language.slice(0, 2);
+}
+
 export async function getCards(tipo, vis) {
-  let lingua = window.navigator.language.slice(0, 2);
+  let lingua = getLingua();
   let cards = await gc(tipo, vis, lingua);
 
   async function prendiLink() {

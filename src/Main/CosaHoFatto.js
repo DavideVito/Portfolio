@@ -4,6 +4,7 @@ import MyContainer from "../Helpers/MyContainer.js";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
 import Link from "@material-ui/core/Link";
+import { getLingua } from "./../Helpers/Utils";
 
 import { userContext } from "../Helpers/Context/userContext";
 
@@ -31,7 +32,7 @@ export default function CosaHoFatto() {
       <div style={{ height: "25px" }}></div>
       <MyContainer direzione="column">
         <Typography color="inherit" variant="h3" gutterBottom>
-          I miei progetti
+          {getLingua() === "en" ? "My Projects?" : "I miei progetti"}
         </Typography>
         <EditableCard tipo="projects" />
         <MyCard
@@ -40,7 +41,9 @@ export default function CosaHoFatto() {
           editMode={false}
           titolo="Riassunty"
           body={
-            "Sito per poter condividere materiali digitali caricati da docenti e studenti"
+            getLingua() === "en"
+              ? "Website to be able to share digital materials uploaded by teachers and students"
+              : "Sito per poter condividere materiali digitali caricati da docenti e studenti"
           }
         >
           <Link
@@ -50,26 +53,28 @@ export default function CosaHoFatto() {
             <Typography variant="h3">Riassunty</Typography>
           </Link>
           <Typography variant="h5" style={{ paddingLeft: "3%" }}>
-            {" "}
-            Perché
+            {getLingua() === "en" ? "Why?" : "Perché?"}
           </Typography>
           <div style={{ height: "20px" }}></div>
 
           <Typography paragraph style={{ paddingLeft: "3%" }}>
-            Offrire agli studenti la possibilità di poter caricare i propri
-            materiali digitali da poter condividere con altri studenti
+            {getLingua() === "en"
+              ? "Offer students the opportunity to upload their own digital materials to share with other students"
+              : "Offrire agli studenti la possibilità di poter caricare i propri materiali digitali da poter condividere con altri studenti"}
           </Typography>
 
           <Typography variant="h5" style={{ paddingLeft: "3%" }}>
-            Cosa Cambia?
+            {getLingua() === "en" ? "What changes?" : "Cosa Cambia?"}
           </Typography>
           <Typography paragraph style={{ paddingLeft: "3%" }}>
-            Infrastruttura veloce e efficiente, sfruttando l'infrastruttura
-            Google
+            {getLingua() === "en"
+              ? "Fast and efficient infrastructure, taking advantage of that provided by Google"
+              : "Infrastruttura veloce e efficiente, sfruttando quella fornita da Google"}
           </Typography>
           <Typography paragraph style={{ paddingLeft: "3%" }}>
-            Riassunti utili e sicuri in quanto caricati da studenti e approvati
-            da prodessori
+            {getLingua() === "en"
+              ? "Useful and safe summaries as they are uploaded by students and approved by professors"
+              : "Riassunti utili e sicuri in quanto caricati da studenti e approvati da professori"}
           </Typography>
         </MyCard>
 

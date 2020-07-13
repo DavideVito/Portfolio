@@ -7,7 +7,7 @@ import ImportContactsOutlinedIcon from "@material-ui/icons/ImportContactsOutline
 import EmojiPeopleOutlinedIcon from "@material-ui/icons/EmojiPeopleOutlined";
 import Typography from "@material-ui/core/Typography";
 import CodeRoundedIcon from "@material-ui/icons/CodeRounded";
-
+import { getLingua } from "../Helpers/Utils";
 import Divider from "@material-ui/core/Divider";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -66,7 +66,9 @@ export default function LeftMenu(props) {
                 <ListItemIcon>
                   <EmojiPeopleOutlinedIcon />
                 </ListItemIcon>
-                <ListItemText primary={"Chi sono?"} />
+                <ListItemText
+                  primary={getLingua() === "en" ? "Who am I?" : "Chi sono?"}
+                />
               </ListItem>
               <Divider />
               <ListItem
@@ -79,11 +81,17 @@ export default function LeftMenu(props) {
                 <ListItemIcon>
                   <ImportContactsOutlinedIcon />
                 </ListItemIcon>
-                <ListItemText primary={"Dove ho studiato"} />
+                <ListItemText
+                  primary={
+                    getLingua() === "en"
+                      ? "Where have I studied?"
+                      : "Dove ho studiato?"
+                  }
+                />
               </ListItem>
               <ListItem
                 button
-                key={"Competenze"}
+                key={getLingua() === "en" ? "Skills" : "Competenze"}
                 onClick={() => {
                   window.location.href = "/competenze";
                 }}
@@ -91,7 +99,9 @@ export default function LeftMenu(props) {
                 <ListItemIcon>
                   <EmojiPeopleOutlinedIcon />
                 </ListItemIcon>
-                <ListItemText primary={"Competenze"} />
+                <ListItemText
+                  primary={getLingua() === "en" ? "Skills" : "Competenze"}
+                />
               </ListItem>
               <Divider />
               <ListItem
@@ -104,7 +114,13 @@ export default function LeftMenu(props) {
                 <ListItemIcon>
                   <CodeRoundedIcon />
                 </ListItemIcon>
-                <ListItemText primary={"Cosa ho fatto"} />
+                <ListItemText
+                  primary={
+                    getLingua() === "en"
+                      ? "What have I done?"
+                      : "Cosa ho fatto?"
+                  }
+                />
               </ListItem>
 
               <Divider />
