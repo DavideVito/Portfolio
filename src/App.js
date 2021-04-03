@@ -4,6 +4,8 @@ import Preloader from "../src/components/Pre";
 import Navbar from "./components/Navbar";
 import Home from "./components/Home/Home";
 import About from "./components/About/About";
+import AboutSkill from "./components/About/About.Skill";
+
 import Projects from "./components/Projects/Projects";
 import Footer from "./components/Footer";
 import Resume from "./components/Resume/Resume";
@@ -12,8 +14,9 @@ import "./style.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import ScrollToTop from "./components/ScrollToTop";
 import { FirebaseAppProvider } from "reactfire";
-import "firebase/firestore"
-import "firebase/storage"
+import "firebase/firestore";
+import "firebase/storage";
+import PageTransition from "react-router-page-transition";
 
 const config = {
   apiKey: "AIzaSyBYD561ewO8v2jDqWVubPhHjwT1njlwHWY",
@@ -47,7 +50,7 @@ function App() {
                 <Projects />
               </Suspense>
             </Route>
-            <Route path="/about" component={About} />
+            <Route path="/about" exact component={About} />
             <Route path="/resume" component={Resume} />
           </Switch>
           <Footer />

@@ -21,14 +21,12 @@ function AboutCard() {
               <i className="far fa-hand-point-right"></i> Playing Games
             </li>
             <li className="about-activity">
-              <i className="far fa-hand-point-right"></i> Learn 
+              <i className="far fa-hand-point-right"></i> Learn
             </li>
             <li className="about-activity">
               <i className="far fa-hand-point-right"></i> Travelling
             </li>
           </ul>
-
-          
         </blockquote>
       </Card.Body>
     </Card>
